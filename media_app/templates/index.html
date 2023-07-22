@@ -1,0 +1,11 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+    {% if request.user.is_authenticated %} 
+        <h1>Hello {{ request.user }}</h1>
+    {% else %}
+        <h1>Hello stranger</h1>
+    {% endif %}
+
+    <a class="btn btn-primary" href="{% url 'media_app_sign_up' %}" >Sign up</a>
+{% endblock %}
