@@ -1,11 +1,61 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-    {% if request.user.is_authenticated %} 
-        <h1>Hello {{ request.user }}</h1>
+    {% if not request.user.is_authenticated %} 
+        <h1>Sorry, you need to be authenticated to add a post.</h1>
     {% else %}
-        <h1>Hello stranger</h1>
-    {% endif %}
+        <form method="POST" action={% url 'media_app_post' %} enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{error_msg}}
+                    Please try again 
+                </div>  
+            {% endif %}
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a caption here" id="floatingTextarea2" style="height: 100px" name="caption"></textarea>
+                <label for="floatingTextarea2">Add your caption</label>
+                <input type="file" name="image_upload" accept=".jpg,.png,.jpeg" >
+                <button type="submit" class="btn btn-primary">Post</button>
+            </div>
+        </form>
 
-    <a class="btn btn-primary" href="{% url 'media_app_sign_up' %}" >Sign up</a>
+        {% comment %} Show a list of user posts {% endcomment %}
+        {% for post in user_posts %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <p class="card-text">{{post.caption}}</p>
+                    <br>
+
+                    <blockquote class="blockquote mb-0">
+                      <footer class="blockquote-footer">{{post.user.username}}</footer>
+                    </blockquote>
+                    <br>
+
+                    {% if request.user.id == post.user.id %}
+                        <a class="p-1 rounded btn btn-primary" href="#">Edit Post</a>
+                    {% endif %}
+                    <br>
+
+                    {% if post.image and post.image.url  %}
+                        <img src={{post.image.url}} style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                        transition: 0.3s;
+                        width: 16rem;
+                        height: 19rem;" />
+                    {% endif %}
+                    <br>
+
+                    {% if request.user.id != post.user.id %}
+                        <form action="{% url 'media_app_post_like' post.id %}" method="GET">
+                            <button type="submit" class="btn btn-primary">Like</button>
+                        </form>
+                    {% endif %}
+                    <br>
+
+                    Number of Likes : {{post.like_post.count}}
+                    
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

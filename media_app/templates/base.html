@@ -17,6 +17,18 @@
   </head>
 
   <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Social Media App</a>
+      {% if request.user.is_authenticated %}
+        <a class="p-1 rounded btn btn-primary" href="{% url 'media_app_logout' %}">Sign Out</a>  
+        {% comment %} <a class="p-1 rounded" href="/profile_settings">View my profile settings</a>   {% endcomment %}
+        <span class="badge bg-secondary">Currently logged in as {{request.user.username}}</span>
+
+      {% else %}
+        <a class="p-1 rounded btn btn-primary" href="{% url 'media_app_sign_up' %}">Sign Up</a>
+        <a class="p-1 rounded btn btn-primary" href="{% url 'media_app_login' %}">Sign In</a>
+      {% endif %} 
+    </nav>
     {% block content %} {% endblock %}
   </body>
 </html>

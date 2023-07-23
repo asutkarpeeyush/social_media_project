@@ -24,7 +24,7 @@ class Profile(MetaInfo):
 
 class Post(MetaInfo):
     user = models.ForeignKey(User, related_name='post',
-                             on_delete=models.CASCADE)
+                             on_delete=models.CASCADE, null=True)
     caption = models.TextField()
     image = models.ImageField(blank=True, null=True)
 
