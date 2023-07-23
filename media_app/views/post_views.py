@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
-from media_app.models import Post, LikePost
+from media_app.models.posts import Post, LikePost
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 
