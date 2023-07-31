@@ -72,6 +72,14 @@ class Login(View):
 
     def get(self, request: HttpRequest, **kwargs: dict):
         page_name = "login.html"
+
+        # get the query params to store in the session
+        requested_redirect = request.GET.get('next', '')
+        if requested_redirect:
+            request.session['next'] = requested_redirect
+
+        print(f"get {request.session.items()}")
+
         return render(request, page_name, {})
 
     def post(self, request: HttpRequest, **kwargs: dict):
@@ -81,8 +89,6 @@ class Login(View):
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
 
-        print(request.session.items())
-
         # validate user existence
         user = auth.authenticate(username=username, password=password)
         if not user:
@@ -90,12 +96,24 @@ class Login(View):
 
         # login the user to create a session
         auth.login(request, user)
-        print(request.session.items())
 
-        return redirect('media_app_index')
+        # fetch the next url from session
+        print(f"post {request.session.items()}")
+        next_url = request.session.get('next', '')
+        if next_url:
+            del request.session['next']
+            print(f"after post {request.session.items()}")
+            return redirect(next_url)
+
+        response = redirect('media_app_index')
+        response.set_cookie('logged_in', True)
+        return response
 
 
 @login_required(login_url='media_app_login')
 def logout(request):
     auth.logout(request)
-    return redirect('media_app_index')
+    response = redirect('media_app_index')
+    # response.delete_cookie('logged_in')
+
+    return response

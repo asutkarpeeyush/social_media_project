@@ -8,7 +8,9 @@ urlpatterns = [
     path('logout', auth_views.logout, name='media_app_logout'),
 
     # Posts related
-    path('post', post_views.UserPost.as_view(), name='media_app_post'),
+    path('post/<int:post_id>', post_views.UserPost.as_view(), name='media_app_post'),
+    path('post', post_views.UserPost.as_view(),
+         name='media_app_post'),  # redundant urls
     path('like_post/<int:post_id>', post_views.UserPostLike.as_view(),
          name='media_app_post_like'),
 

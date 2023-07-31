@@ -1,0 +1,19 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+    <form method="POST" action={% url 'media_app_post' post_id %} enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{error_msg}}
+                Please try again 
+            </div>  
+        {% endif %}
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Update your caption here" id="floatingTextarea2" style="height: 100px" name="caption" value={{ form_data.caption }}></textarea>
+            <label for="floatingTextarea2">Update your caption</label>
+            <input type="file" name="image_upload" accept=".jpg,.png,.jpeg" value={{ form_data.image }}>
+            <button type="submit" class="btn btn-primary">Update Post</button>
+        </div>
+    </form>
+{% endblock %}

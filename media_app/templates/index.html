@@ -33,7 +33,7 @@
                     <br>
 
                     {% if request.user.id == post.user.id %}
-                        <a class="p-1 rounded btn btn-primary" href="#">Edit Post</a>
+                        <a class="p-1 rounded btn btn-primary" href="{% url 'media_app_post' post.id %}">Edit Post</a>
                     {% endif %}
                     <br>
 
